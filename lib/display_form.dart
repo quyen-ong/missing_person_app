@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+import 'package:flutter/cupertino.dart';
+
 
 class FormDisplay extends StatefulWidget {
   const
@@ -10,6 +14,21 @@ class FormDisplay extends StatefulWidget {
 }
 
 class _FormDisplay extends State<FormDisplay> {
+  File _image = File("");
+  final picker = ImagePicker();
+
+  //Image Picker function to get image from gallery
+  Future getImageFromGallery() async {
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+      }
+    });
+  }
+
+
   // text controllers
   TextEditingController nameController = TextEditingController();
   TextEditingController genderController = TextEditingController();
@@ -37,6 +56,26 @@ class _FormDisplay extends State<FormDisplay> {
     stationController.dispose();
     dateController.dispose();
     super.dispose();
+  }
+
+  Future showOption() async {
+    showCupertinoModalPopup(
+      context: context,
+      builder: (context) =>
+          CupertinoActionSheet(
+            actions: [
+              CupertinoActionSheetAction(
+                child: const Text('Photo Gallery'),
+                onPressed: () {
+                  // close the options modal
+                  Navigator.of(context).pop();
+                  // get image from gallery
+                  getImageFromGallery();
+                },
+              ),
+            ],
+          ),
+    );
   }
 
   @override
@@ -77,6 +116,20 @@ class _FormDisplay extends State<FormDisplay> {
             _textField(context, stationController, "Police Station Currently Reported Missing At", "Enter Police Station"),
             _textField(context, dateController, "Date", "Enter Date"),
 
+            const Text('\nAdd Image',
+              style: TextStyle(
+                fontSize: 20.0,
+              ),
+            ),
+
+            TextButton(
+              onPressed: showOption,
+              child: const Text('Select Image'),
+            ),
+
+
+            Image.file(_image),
+
           ],
         ), // Center
       ), // Padding
@@ -98,8 +151,8 @@ class _FormDisplay extends State<FormDisplay> {
   }
 }  // end of _SecondPageDisplayState
 
-Widget _textField( BuildContext context, TextEditingController textFieldController, String label, String hint){
-  return  TextField(
+Widget _textField( BuildContext context, TextEditingController textFieldController, String label, String hint) {
+  return TextField(
     controller: textFieldController,
 
     decoration: InputDecoration(
@@ -107,13 +160,12 @@ Widget _textField( BuildContext context, TextEditingController textFieldControll
       hintText: hint,
     ), // InputDecoration
 
-    onEditingComplete: (){
+    onEditingComplete: () {
       // dismiss keyboard after the
       // user clicks on the done key
       FocusScope.of(context)
-          .requestFocus( FocusNode() );
+          .requestFocus(FocusNode());
     },
 
   ); // TextField
-
 }          // _textField
