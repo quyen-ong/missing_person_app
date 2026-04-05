@@ -20,7 +20,7 @@ A Flutter mobile app prototype created for the Philisa Abafazi Bethu Centre in C
 
 ### Demo Video
 
-[Watch the demo video from the presentation](http://drive.google.com/file/d/12FUhnBM2cHdkAHD873REkFBCz7VjfLPY/view)
+[Demo Link](http://drive.google.com/file/d/12FUhnBM2cHdkAHD873REkFBCz7VjfLPY/view)
 
 ## Overview
 
